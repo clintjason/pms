@@ -11,6 +11,7 @@ import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 export const mainListItems = (
   <React.Fragment>
@@ -38,11 +39,11 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton component={RouterLink} to="/users">
       <ListItemIcon>
-        <LayersIcon />
+        <GroupsIcon />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="Users" />
     </ListItemButton>
   </React.Fragment>
 );

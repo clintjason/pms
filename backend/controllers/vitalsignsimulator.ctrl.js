@@ -1,3 +1,5 @@
+const models = require("../models");
+const VitalSign = models.VitalSign;
 
 /*
   Oral temperature: 35.5°C to 37.5°C
@@ -52,7 +54,6 @@ function getTemperature(type) {
   Child: 80 to 140 bpm
   Elderly: 50 to 90 bpm
 */
-
 exports.generateHeartRate = (req, res) => {
   const heartRateType = req.query.type;
   const heartRate = getHeartRate(heartRateType);
@@ -132,3 +133,23 @@ const getRespiratoryRate = (type) => {
 const getRandomValue = (min, max) => {
   return Math.random() * (max - min) + min;
 };
+
+exports.generateVitalSigns = async (req, res) => {
+  try {
+    console.log(req.body)
+    const temperatureType = req.body.temperatureType;
+    const data = {
+      temperature: +getTemperature(temperatureType),
+      heart_rate: getRandomValue(40, 180),
+      respiration_rate: getRandomValue(12,60),
+      monitoring_session_id: res.locals.monitoringSessionId,
+      patient_id: res.locals.userId
+    }
+    //monitoring_session_id
+    const vitals = await VitalSign.create(data);
+    res.status(200).json({ message: "Vital Signs Simulation Successful", vitals })
+  } catch (error) {
+    console.error("VSG Error: ", error);
+    res.status(500).json({error: error.message});
+  }
+}

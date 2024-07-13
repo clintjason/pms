@@ -8,31 +8,31 @@ module.exports = (sequelizeConnection, DataTypes) => {
         },
         fullname: {
           type: DataTypes.STRING,
-          allowNull: false
+          allowNull: true
         },
         age: {
           type: DataTypes.INTEGER,
-          allowNull: false
+          allowNull: true
         },
         gender: {
           type: DataTypes.STRING,
-          allowNull: false
+          allowNull: true
         },
         phone_number: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
           unique: true
         },
         address: {
           type: DataTypes.STRING,
-          allowNull: false
+          allowNull: true
         },
       });
 
       Patient.associate = function(models) {
         Patient.belongsTo(models.User, { foreignKey: 'patient_id' });
         Patient.hasMany(models.VitalSign, { foreignKey: 'patient_id' });
-        Patient.hasMany(models.MonitoringSession, { foreignKey: 'patient_id' });
+        //Patient.hasMany(models.MonitoringSession, { foreignKey: 'patient_id' });
       };
       
       return Patient;

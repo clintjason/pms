@@ -111,4 +111,47 @@ vitalSignSimulatorRouter.get('/heartrate', auth, vitalSignSimulatorCtrl.generate
  */
 vitalSignSimulatorRouter.get('/respiratoryrate', auth, vitalSignSimulatorCtrl.generateRespiratoryRate);
 
+/**
+ * @swagger
+ * /vital-sign-simulator-api/:
+ *   post:
+ *     summary: Vital Sign Simulator API endpoint
+ *     tags: [Vital Sign Simulator]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             temperatureType: string
+ *     responses:
+ *       201:
+ *         description: Vital Signs  successfully simulated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/VitalSign'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Bad request
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+vitalSignSimulatorRouter.post('/', auth, vitalSignSimulatorCtrl.generateVitalSigns);
+
+
 module.exports = vitalSignSimulatorRouter;

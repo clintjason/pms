@@ -1,26 +1,14 @@
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import Avatar from '@mui/material/Avatar';
 import { object as YupObject} from 'yup';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import { TextField, Avatar, Typography, FormHelperText, FormControl, FormControlLabel, Checkbox, Button, Grid, Box, Paper, Link, CircularProgress, Snackbar, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import sideImg from '../../assets/pixlr-image-generator-cbe82a4b-0f58-4f73-8391-6048e2faf68a.png';
 import {passwordValidationSchema, emailValidationSchema   } from '../../utils/ValidationSchemas';
 import { TextField as FormikTextField, Select as FormikSelect, Checkbox as CheckboxWithLabel} from 'formik-mui';
-import FormHelperText from '@mui/material/FormHelperText';
 import { apiLogin } from '../../services/api.service';
 import { useNavigate } from 'react-router-dom';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useDispatch } from 'react-redux';
 import { login as loginReducer } from '../../reducers/authSlice'; 
 
@@ -41,14 +29,21 @@ const SignInSchema = YupObject().shape({
 
 export default function SignInSide() {
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
       let data = await apiLogin(values);
       setLoading(false);
+      setOpen(true);
       
       if (values.rememberMe) {
         localStorage.setItem('user_pms', JSON.stringify(data));
@@ -59,8 +54,9 @@ export default function SignInSide() {
       setLoading(false);
       navigate('/');
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Signin Error: ", error);
       setLoading(false);
+      setError(error.message);
     }
   };
 
@@ -158,6 +154,18 @@ export default function SignInSide() {
                   Sign in
                 </Button>
                 }
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Login successfull
+                  </Alert>
+                </Snackbar>
+                {error && (
+                  <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError('')}>
+                    <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>
+                      {error}
+                    </Alert>
+                  </Snackbar>
+                )}
                 <Grid container>
                   <Grid item xs>
                     <Link href="#" variant="body2">

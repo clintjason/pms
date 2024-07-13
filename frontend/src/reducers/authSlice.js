@@ -6,6 +6,8 @@ const authSlice = createSlice({
     token: null,
     user: null,
     userId: null,
+    session: null,
+    monitoring_session_id: null,
     isAuthenticated: false,
   },
   reducers: {
@@ -20,6 +22,8 @@ const authSlice = createSlice({
     },
     login: (state, action) => {
       state.token = action.payload.token;
+      state.session = action.payload.session;
+      state.monitoring_session_id = action.payload.monitoring_session_id;
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
@@ -27,6 +31,7 @@ const authSlice = createSlice({
       console.log('logout Reducer')
       state.token = null;
       state.user = null;
+      state.session = null;
       state.isAuthenticated = false;
       localStorage.removeItem("pms_userId");
       localStorage.removeItem("pms_token");

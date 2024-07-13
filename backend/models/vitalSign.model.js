@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 	)
   VitalSign.associate = function(models) {
     VitalSign.belongsTo(models.Patient, {foreignKey: "patient_id"});
-    VitalSign.belongsTo(models.MonitoringSession, { foreignKey: 'session_id' });
+    VitalSign.belongsTo(models.MonitoringSession, { foreignKey: 'monitoring_session_id' });
   }
 	return VitalSign;
 }

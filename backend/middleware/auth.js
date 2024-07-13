@@ -17,10 +17,14 @@ module.exports = (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
         if(!decodedToken) throw "Invalid Token Authentication";
         const userId = decodedToken.userId;
-        console.log(userId);
         res.locals.userId = userId;
+        console.log(req.headers)
+        const sessionId = req.headers["sessionid"];
+        res.locals.sessionId = sessionId;
+        const monitoringSessionId = req.headers["monitoringsessionid"];
+        console.log("monitoringSession ID: ", monitoringSessionId);
+        res.locals.monitoringSessionId = monitoringSessionId;
         if (req.body.userId && (req.body.userId !== userId)) {
-            console.log("inside user")
             throw 'Invalid UserId';
         } else {
             next();

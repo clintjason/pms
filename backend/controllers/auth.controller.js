@@ -3,8 +3,9 @@ const jwt = require('jsonwebtoken');
 const models = require("../models");
 const User = models.User;
 const Session = models.Session;
-
-
+const MonitoringSession = models.MonitoringSession;
+const Patient = models.Patient;
+const Doctor = models.Doctor;
 /**
   * SignUp a User
   * @swagger
@@ -31,6 +32,13 @@ exports.signUp = async (req, res) => {
 
     // Save User in the database
     const userResult = await User.create(user);
+
+    if(role === 'patient') {
+      const patient = await Patient.create({patient_id: userResult.id});
+    }
+    if(role === 'doctor') {
+      const doctor = await Doctor.create({ doctor_id: userResult.id});
+    }
     return res.status(201).json({ message: 'User created successfully', userResult });
   } catch(error) {
     console.log("Error during signup", error);
@@ -69,18 +77,48 @@ exports.login = async (req, res) => {
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + (rememberMe ? 720 : 1)); // 720 hours = 30 days
 
-    await Session.create({
+    // create a new session
+    const session = await Session.create({
       user_id: user.id,
       token,
       expires_at: expiresAt,
     });
 
-    res.status(200).json({ message: 'Login successful', user, token });
+    console.log("Session: ", session);
+    // Create a new monitoring session
+    const monitoringSession = await MonitoringSession.create({
+      session_id: session.id,
+    });
+
+    res.status(200).json({ message: 'Login successful', user, token, session, monitoringSessionId: monitoringSession.id });
   } catch (error) {
     console.error("Error during login", error)
     res.status(401).json({error: error.message});
    }
 }
+
+exports.signOut = async (req, res) => {
+  const userId = res.locals.userId;
+
+  try {
+    // Find the latest active monitoring session for the user
+    const monitoringSession = await MonitoringSession.findOne({
+      where: { patient_id: userId, end_time: null },
+      order: [['start_time', 'DESC']],
+    });
+
+    if (monitoringSession) {
+      // Update the end_time to stop the monitoring session
+      monitoringSession.end_time = new Date();
+      await monitoringSession.save();
+    }
+
+    res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    console.error('Logout Error:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
 
 /**
   * Reset Password

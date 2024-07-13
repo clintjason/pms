@@ -9,6 +9,15 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const authToken = store.getState().auth.token;
+    const session = store.getState().auth.session;
+
+    if (session && session.id) {
+      config.headers['sessionid'] = session.id;
+    }
+
+    if (monitoring_session_id) {
+      config.headers['monitoringsessionid'] = monitoring_session_id;
+    }
     if(authToken) {
       config.headers.Authorization = `Bearer ${authToken}`;
     } else {

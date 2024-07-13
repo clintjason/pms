@@ -8,21 +8,21 @@ module.exports = (sequelizeConnection, DataTypes) => {
       },
       fullname: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       specialization: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       phone_number: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true
       },
     });
     Doctor.associate = function(models) {
       Doctor.belongsTo(models.User, { foreignKey: 'doctor_id' });
-      Doctor.hasMany(models.MonitoringSession, { foreignKey: 'doctor_id' });
+      //Doctor.hasMany(models.MonitoringSession, { foreignKey: 'doctor_id' });
       Doctor.belongsToMany(models.Patient, {
         through: 'PatientDoctorRelationship',
         foreignKey: 'doctor_id'

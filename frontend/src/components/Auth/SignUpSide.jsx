@@ -1,26 +1,13 @@
 import {useState} from 'react';
 import { Formik, Form, Field } from 'formik';
 import { object as YupObject} from 'yup';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import { TextField, Avatar, Typography, FormHelperText, FormControl, FormControlLabel, Checkbox, Button, Grid, Box, Paper, Link, MenuItem, CssBaseline, CircularProgress, Snackbar, Alert } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
 import sideImg from '../../assets/pixlr-image-generator-cbe82a4b-0f58-4f73-8391-6048e2faf68a.png';
 import { TextField as FormikTextField, Select as FormikSelect, Checkbox as CheckboxWithLabel} from 'formik-mui';
 import {usernameValildationSchema, passwordValidationSchema, emailValidationSchema, roleValidationSchema, termsAndConditionsValidationSchema   } from '../../utils/ValidationSchemas';
-import FormHelperText from '@mui/material/FormHelperText';
 import { signup } from '../../services/api.service';
 import { useNavigate } from 'react-router-dom';
-import CircularProgress from '@mui/material/CircularProgress';
 
 function Copyright(props) {
   return (
@@ -43,15 +30,24 @@ const SignUpSchema = YupObject().shape({
 export default function SignUpSide() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
       await signup(values);
+      setOpen(true);
       setLoading(false);
       navigate('/signin');
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Signup Error: ", error);
       setLoading(false); 
+      setError(error.message);
     }
   };
 
@@ -180,6 +176,18 @@ export default function SignUpSide() {
                   Sign up
                 </Button>
                 }
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Sig Up successfull
+                  </Alert>
+                </Snackbar>
+                {error && (
+                  <Snackbar open={Boolean(error)} autoHideDuration={6000} onClose={() => setError('')}>
+                    <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>
+                      {error}
+                    </Alert>
+                  </Snackbar>
+                )}
                 <Grid container>
                   <Grid item>
                     <Link href="/signin" variant="body2">
