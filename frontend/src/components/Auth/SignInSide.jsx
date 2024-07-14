@@ -42,7 +42,6 @@ export default function SignInSide() {
     setLoading(true);
     try {
       let data = await apiLogin(values);
-      setLoading(false);
       setOpen(true);
       
       if (values.rememberMe) {

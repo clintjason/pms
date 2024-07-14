@@ -1,48 +1,60 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid, CircularProgress, Snackbar, Alert } from '@mui/material';
-import axios from 'axios';
+import { TextField, Button, FormControl, MenuItem, Grid, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import { object as YupObject} from 'yup';
-import FormHelperText from '@mui/material/FormHelperText';
 import { TextField as FormikTextField, Select as FormikSelect, Checkbox as CheckboxWithLabel} from 'formik-mui';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
+import { apiVitalSignSimulator } from '../../services/api.service';
+import { temperatureTypeValidationSchema, symptomsValidationSchema, conditionValidationSchema, feedbackValidationSchema } from '../../utils/ValidationSchemas';
+
+const ValidatorSchema = YupObject().shape({
+  temperatureType:  temperatureTypeValidationSchema,
+  symptoms: symptomsValidationSchema,
+  feedback: feedbackValidationSchema,
+  condition_before_taking_vital_signs: conditionValidationSchema,
+});
+
+const conditions = [
+  "Resting/Sedentary",
+  "Post-Exercise",
+  "During Exercise",
+  "Asleep",
+  "Awake",
+  "Stress/Anxiety",
+  "Relaxed",
+  "Fasted",
+  "Post-Meal",
+  "Dehydrated",
+  "Hydrated",
+];
+
+const symptoms = [
+  "Fever",
+  "Shortness of breath",
+  "Rapid heartbeat",
+  "Dizziness",
+  "Sweating",
+  "Fatigue",
+  "No symptoms",
+];
 
 const VitalSignForm = () => {
-  const [temperature, setTemperature] = useState('');
-  const [temperatureType, setTemperatureType] = useState('');
-  const [heartRate, setHeartRate] = useState('');
-  const [heartRateType, setHeartRateType] = useState('');
-  const [respirationRate, setRespirationRate] = useState('');
-  const [respirationRateType, setRespirationRateType] = useState('');
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async (values) => {
     setLoading(true);
-    axios.post('/api/vital-signs', {
-      temperature,
-      temperature_type: temperatureType,
-      heart_rate: heartRate,
-      heart_rate_type: heartRateType,
-      respiration_rate: respirationRate,
-      respiration_rate_type: respirationRateType
-    }) // Replace with your API endpoint
-      .then(response => {
-        setLoading(false);
-        setOpen(true);
-        setTemperature('');
-        setTemperatureType('');
-        setHeartRate('');
-        setHeartRateType('');
-        setRespirationRate('');
-        setRespirationRateType('');
-      })
-      .catch(error => {
-        setLoading(false);
-        setError(error.message);
-      });
+    console.log(values);
+    try {
+      let data = await apiVitalSignSimulator(values);
+      setLoading(false);
+      setOpen(true);
+      console.log("Data received: " + data)
+    } catch (error) {
+      console.error("VitalSignSimulator Error: ", error);
+      setLoading(false);
+      setError(error.message);
+    }
   };
 
   const handleClose = () => {
@@ -51,8 +63,8 @@ const VitalSignForm = () => {
 
   return (
     <Formik
-        initialValues={{ temperatureType: '', }}
-        //validationSchema={}
+        initialValues={{ temperatureType: '', symptoms:[], feedback: '', condition_before_taking_vital_signs:[] }}
+        validationSchema={ValidatorSchema}
         onSubmit={handleSubmit}
       >
       {({ errors, touched }) => (
@@ -76,9 +88,59 @@ const VitalSignForm = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
-                {loading ? <CircularProgress size={24} /> : 'Simulate'}
-              </Button>
+              <FormControl fullWidth error={touched.symptoms && Boolean(errors.symptoms)}>
+                <Field
+                  component={FormikSelect}
+                  name="symptoms"
+                  labelId="symptoms-label"
+                  label="Symptoms"
+                  multiple
+                  fullWidth
+                >
+                  {symptoms.map((symptom, index) => (
+                    <MenuItem key={index} value={symptom}>{symptom}</MenuItem>
+                  ))}
+                </Field>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth error={touched.condition_before_taking_vital_signs && Boolean(errors.condition_before_taking_vital_signs)}>
+                <Field
+                  component={FormikSelect}
+                  name="condition_before_taking_vital_signs"
+                  labelId="condition_before_taking_vital_signs-label"
+                  label="Condition before taking your vitals"
+                  multiple
+                  fullWidth
+                >
+                  {conditions.map((condition, index) => (
+                    <MenuItem key={index} value={condition}>{condition}</MenuItem>
+                  ))}
+                </Field>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth error={touched.feedback && Boolean(errors.feedback)}>
+                <Field
+                  component={FormikTextField}
+                  name="feedback"
+                  labelId="feedback-label"
+                  label="Feedback"
+                  multiline
+                  rows={4}
+                  fullWidth
+                >
+                </Field>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              {loading ?
+                <CircularProgress size={24} />
+              :
+                <Button variant="contained" color="primary" disabled={loading} type='submit'>
+                  Simulate
+                </Button>
+              }
             </Grid>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>

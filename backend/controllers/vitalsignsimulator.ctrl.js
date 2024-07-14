@@ -134,22 +134,44 @@ const getRandomValue = (min, max) => {
   return Math.random() * (max - min) + min;
 };
 
+const roundToTwoDecimalPlaces = (num) => {
+  return Math.round(num * 100) / 100;
+};
+
 exports.generateVitalSigns = async (req, res) => {
   try {
     console.log(req.body)
     const temperatureType = req.body.temperatureType;
+    const symptoms = req.body.symptoms;
+    const feedback = req.body.feedback;
+    const condition_before_taking_vital_signs = req.body.condition_before_taking_vital_signs;
+    
     const data = {
       temperature: +getTemperature(temperatureType),
-      heart_rate: getRandomValue(40, 180),
-      respiration_rate: getRandomValue(12,60),
+      heart_rate: roundToTwoDecimalPlaces(getRandomValue(40, 180)),
+      respiration_rate: roundToTwoDecimalPlaces(getRandomValue(12,60)),
       monitoring_session_id: res.locals.monitoringSessionId,
-      patient_id: res.locals.userId
+      patient_id: res.locals.userId,
+      temperature_type: temperatureType,
+      symptoms: symptoms.join(', '),
+      feedback: feedback,
+      condition_before_taking_vital_signs: condition_before_taking_vital_signs.join(', '),
     }
-    //monitoring_session_id
+    
     const vitals = await VitalSign.create(data);
     res.status(200).json({ message: "Vital Signs Simulation Successful", vitals })
   } catch (error) {
     console.error("VSG Error: ", error);
+    res.status(500).json({error: error.message});
+  }
+}
+
+exports.getAllVitalSigns = async (req, res) => {
+  try {
+    const vitals = await VitalSign.findAll({order: [['createdAt', 'DESC']]});
+    res.status(200).json({ message: "Fetch All Vital Signs Successful", vitals })
+  } catch (error) {
+    console.error("FetchVitalSigns: ", error);
     res.status(500).json({error: error.message});
   }
 }

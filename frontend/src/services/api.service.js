@@ -19,10 +19,20 @@ export const apiLogin = (data) => api.post(import.meta.env.VITE_DEV_BASE_URL + `
     throw error;
   })
 
-export const getAppointments = () => api.get(import.meta.env.VITE_DEV_BASE_URL + `appointments/`)
+  export const apiVitalSignSimulator = (data) => api.post(import.meta.env.VITE_DEV_BASE_URL + `vital-sign-simulator-api`, data)
   .then(response => {
-    const data = response.data.map(elmt => {
-      return {...elmt, key: elmt.id}
+    return response.data;
+  })
+  .catch(error => {
+    console.error("Vital Sign Simulator api endpoint error:", error);
+    throw error;
+  })
+
+export const getAllVitalSigns = () => api.get(import.meta.env.VITE_DEV_BASE_URL + `vital-sign-simulator-api`)
+  .then(response => {
+    console.log("RESPONSE: ", response)
+    const data = response.data.vitals.map(vital => {
+      return {...vital, key: vital.vital_sign_id}
     })
     return data;
   })
@@ -80,5 +90,3 @@ export const getUser = (id) => api.get(import.meta.env.VITE_DEV_BASE_URL + `user
     throw error;
   })
 
-
-export default getAppointments;

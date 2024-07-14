@@ -12,6 +12,10 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import GroupsIcon from '@mui/icons-material/Groups';
+import EmergencyShareIcon from '@mui/icons-material/EmergencyShare';
+import LightbulbCircleIcon from '@mui/icons-material/LightbulbCircle';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 export const mainListItems = (
   <React.Fragment>
@@ -45,25 +49,31 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Users" />
     </ListItemButton>
+    <ListItemButton component={RouterLink} to="/alerts">
+      <ListItemIcon>
+        <EmergencyShareIcon />
+      </ListItemIcon>
+      <ListItemText primary="Alerts" />
+    </ListItemButton>
   </React.Fragment>
 );
 
 export const secondaryListItems = (
   <React.Fragment>
     <ListSubheader component="div" inset>
-      Saved reports
+      Additional Support
     </ListSubheader>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon />
+        <ErrorOutlineIcon />
       </ListItemIcon>
-      <ListItemText primary="Current month" />
+      <ListItemText primary="Helpful Resources" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <AssignmentIcon />
+        <HelpOutlineIcon />
       </ListItemIcon>
-      <ListItemText primary="Last quarter" />
+      <ListItemText primary="Questions" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>

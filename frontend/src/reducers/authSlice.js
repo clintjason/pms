@@ -23,7 +23,7 @@ const authSlice = createSlice({
     login: (state, action) => {
       state.token = action.payload.token;
       state.session = action.payload.session;
-      state.monitoring_session_id = action.payload.monitoring_session_id;
+      state.monitoring_session_id = action.payload.monitoringSessionId;
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },

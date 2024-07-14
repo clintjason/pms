@@ -9,6 +9,7 @@ import VitalSignSimulator from './components/VitalSignSimulator/index.jsx';
 import Reports from './components/Reports/index.jsx';
 import Patients from './components/Patients/index.jsx';
 import Users from './components/Users/index.jsx';
+import Alerts from './components/Alerts/index.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,6 +23,7 @@ function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="patients" element={<Patients />} />
           <Route path="users" element={<Users />} />
+          <Route path="alerts" element={<Alerts />} />
         </Route>
         <Route path="/signin" element={<SignInSide />} />
         <Route path="/signup" element={<SignUpSide />} />

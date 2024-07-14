@@ -13,6 +13,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      symptoms: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      feedback: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      condition_before_taking_vital_signs: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      temperature_type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       heart_rate: {
         type: DataTypes.INTEGER,
         allowNull: false,
