@@ -3,36 +3,41 @@ import { Container, Grid, Paper, Typography, Snackbar, Alert } from '@mui/materi
 import VitalSignTable from './VitalSignTable';
 import VitalSignForm from './VitalSignForm';
 import VitalSignChart from './VitalSignChart';
-import { getAllVitalSigns } from '../../services/api.service';
+import { apiGetPatientVitalSigns } from '../../services/api.service';
+import { useSelector} from 'react-redux';
 
 const VitalSignSimulator = () => {
   const [vitalSigns, setVitalSigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
+  const patientId = useSelector((state) => state.auth?.user?.id);
+  //console.log("Now: ", patientId);
 
   useEffect(() => {
-    fetchVitalSigns();
-  }, []);
+    fetchPatientVitalSigns(patientId);
+  }, [patientId]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleRefresh = () => {
-    fetchVitalSigns();
+    fetchPatientVitalSigns(patientId);
   };
 
-  const fetchVitalSigns = async () => {
+  const fetchPatientVitalSigns = async (patientId) => {
     setLoading(true);
     try {
-      const vitals = await getAllVitalSigns();
+      console.log("PatientID in Vitals: ", patientId);
+      const data = { patientId: patientId }
+      const vitals = await apiGetPatientVitalSigns(data);
       console.log("Vitals", vitals)
       setVitalSigns(vitals);
       setLoading(false);
       setOpen(true);
     } catch (error) {
-      console.error("fetchVitalSigns Error: ", error);
+      console.error("fetchPatientVitalSigns Error: ", error);
       setLoading(false);
       setError(error.message);
     }
@@ -68,7 +73,7 @@ const VitalSignSimulator = () => {
       </Grid>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Vital signs fetched successfully!
+          Patient Vital signs fetched successfully!
         </Alert>
       </Snackbar>
       {error && (

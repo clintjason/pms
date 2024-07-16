@@ -30,7 +30,8 @@ export default function Patients() {
   const fetchPatientVitalSigns = async (patientId) => {
     setLoading(true);
     try {
-      const vitals = await apiGetPatientVitalSigns(patientId);
+      const data = { patientId: patientId }
+      const vitals = await apiGetPatientVitalSigns(data);
       console.log("Vitals", vitals)
       setVitalSigns(vitals);
       setLoading(false);
@@ -57,10 +58,10 @@ export default function Patients() {
       </Container>
       <Container sx={{ my: 4, }}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-        <Typography component="h2" variant="h6" color="primary" gutterBottom>
+          <Typography component="h2" variant="h6" color="primary" gutterBottom>
             Vital Sign Chart
           </Typography>
-        <VitalSignChart vitalSigns={vitalSigns} loading={loading} />
+          <VitalSignChart vitalSigns={vitalSigns} loading={loading} />
         </Paper>
       </Container>
       <Container>

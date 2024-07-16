@@ -155,7 +155,7 @@ vitalSignSimulatorRouter.post('/', auth, vitalSignSimulatorCtrl.generateVitalSig
 
 /**
  * @swagger
- * /vital-sign-simulator-api:
+ * /vital-sign-simulator-api
  *   get:
  *     summary: Get all Vital Signs
  *     tags: [Vital Sign Simulator]
@@ -189,7 +189,41 @@ vitalSignSimulatorRouter.post('/', auth, vitalSignSimulatorCtrl.generateVitalSig
  */
 vitalSignSimulatorRouter.get('/', auth, vitalSignSimulatorCtrl.getAllVitalSigns);
 
-vitalSignSimulatorRouter.get('/patient-vitals?:patient_id', auth, vitalSignSimulatorCtrl.getPatientVitalSigns);
+/**
+ * @swagger
+ * /vital-sign-simulator-api/patient-vitals
+ *   post:
+ *     summary: Get a patient Vital Signs
+ *     tags: [Vital Sign Simulator]
+ *     responses:
+ *       201:
+ *         description: The Vital signs were successfully fetched
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/VitalSign'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Bad request
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+vitalSignSimulatorRouter.post('/patient-vitals', auth, vitalSignSimulatorCtrl.getPatientVitalSigns);
 
 
 module.exports = vitalSignSimulatorRouter;

@@ -94,7 +94,7 @@ exports.getUser = async (req, res) => {
       return res.status(404).json({error: "User not Found"});
     }
 
-    return res.status(201).json({ message: 'User fetched successfully', user });
+    return res.status(200).json({ message: 'User fetched successfully', user });
 
   } catch (error) {
     console.log("getOneUser Error: ", error);
@@ -111,15 +111,50 @@ exports.getUser = async (req, res) => {
  * the query username or not with status code 200
  * 
  */
-exports.getUsers = (req, res) => {
-  const username = req.query.username;
-  let condition = username ? { username: { [Op.like]: `%${username}%` } } : null;
+exports.getAllUsers = async (req, res) => {
+  try {
+    const { search } = req.query;
+    let whereClause = {};
+    if(search) {
+      whereClause = {
+        [Op.or]: [
+          { username: { [Op.like]: `%${search}%` } },
+          { email: { [Op.like]: `%${search}%` } },
+          { role: { [Op.like]: `%${search}%` } },
+          /* { '$Patient.fullname$': { [Op.like]: `%${search}%` } },
+          { '$Patient.age$': { [Op.like]: `%${search}%` } },
+          { '$Patient.gender$': { [Op.like]: `%${search}%` } },
+          { '$Patient.phone_number$': { [Op.like]: `%${search}%` } },
+          { '$Patient.address$': { [Op.like]: `%${search}%` } },
+          { '$Doctor.fullname$': { [Op.like]: `%${search}%` } },
+          { '$Doctor.specialization$': { [Op.like]: `%${search}%` } },
+          { '$Doctor.phone_number$': { [Op.like]: `%${search}%` } }, */
+        ]
+      };
+    }
 
-  //User.findAll({ where: condition, include: ["Comments","Posts"], attributes: { exclude: ['password'] }, order: [['createdAt', 'DESC']] })
-  User.findAll({ where: condition, attributes: { exclude: ['password'] }, order: [['createdAt', 'DESC']] })
-    .then(user => {res.status(200).json(user);})
-    .catch(error => {res.status(500).json({error: !parseInt(error) ? "Error while retrieving User." : error});});
-}
+    const users = await User.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: models.Patient,
+          as: 'Patient',
+          attributes: ['fullname', 'age', 'gender', 'phone_number', 'address']
+        },
+        {
+          model: models.Doctor,
+          as: 'Doctor',
+          attributes: ['fullname', 'specialization', 'phone_number']
+        }
+      ]
+    });
+
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error('getAllUsers Error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 /**
  * Updates an existing user email and/or username in the database

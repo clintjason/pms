@@ -93,8 +93,9 @@ export const getAllVitalSigns = () => api.get(import.meta.env.VITE_DEV_BASE_URL 
     throw error;
   })
 
-export const apiGetPatientVitalSigns = (patient_id) => api.get(import.meta.env.VITE_DEV_BASE_URL + `vital-sign-simulator-api/patient-vitals?${patient_id}`)
+export const apiGetPatientVitalSigns = (patient_id) => api.post(import.meta.env.VITE_DEV_BASE_URL + `vital-sign-simulator-api/patient-vitals/`, patient_id)
   .then(response => {
+    console.log("ge", response);
     const data = response.data?.vitals.map(vital => {
       return {...vital, key: vital.vital_sign_id}
     })
@@ -132,7 +133,16 @@ export const apiGetPatient = () => api.get(import.meta.env.VITE_DEV_BASE_URL +  
   throw error;
 })
 
-export const apiGetAllPatients = (query) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `patient/all?${query}`)
+export const apiGetAllPatients = (query) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `patient/all/${query}`)
+.then(response => {
+  return response.data;
+})
+.catch(error => {
+  console.error("apiGetAllPatients Error: ", error);
+  throw error;
+})
+
+export const apiGetAllUsers = (query) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `user/all/${query}`)
 .then(response => {
   return response.data;
 })

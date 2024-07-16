@@ -26,11 +26,6 @@ const VitalSignChart = ({ vitalSigns, loading }) => {
       const heartRates = vitalSigns.map(vs => vs.heart_rate);
       const respirationRates = vitalSigns.map(vs => parseFloat(vs.respiration_rate));
   
-      console.log("Temperature: ", temperatures);
-      console.log("heartRates: ", heartRates);
-      console.log("respirationRates: ", respirationRates);
-      console.log("dates: ", dates);
-  
       setChartData({
         labels: dates,
         datasets: [

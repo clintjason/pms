@@ -1,8 +1,9 @@
 const express= require('express');
 const userRouter = express.Router();
-const { updateAvatar, updateEmailUsername, getUser, deleteUser, getUsers, resetPassword } = require('../controllers/user.controller');
+const { updateAvatar, updateEmailUsername, getUser, deleteUser, getAllUsers, resetPassword } = require('../controllers/user.controller');
 const fileUpload = require('../middleware/fileUpload');
 const auth = require('../middleware/auth');
+const adminSession = require('../middleware/adminSession');
 
 /**
  * @swagger
@@ -98,7 +99,7 @@ userRouter.put('/update-avatar', auth, fileUpload ,updateAvatar);
 
 /**
  * @swagger
- * /user:
+ * /user/all:
  *   get:
  *     summary: Returns the list of all the users
  *     tags: [Users]
@@ -112,7 +113,7 @@ userRouter.put('/update-avatar', auth, fileUpload ,updateAvatar);
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-userRouter.get('/all', auth, getUsers);
+userRouter.get('/all', adminSession, getAllUsers);
 
 /**
  * @swagger

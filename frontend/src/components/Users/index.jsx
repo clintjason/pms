@@ -1,3 +1,9 @@
+import UserTable from './UserTable';
+
 export default function Users() {
-  return <h1>Users</h1>
+  return (
+    <>
+      <UserTable />
+    </>
+  )
 }
