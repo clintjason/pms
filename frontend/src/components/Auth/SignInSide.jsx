@@ -45,9 +45,9 @@ export default function SignInSide() {
       setOpen(true);
       
       if (values.rememberMe) {
-        localStorage.setItem('user_pms', JSON.stringify(data));
+        localStorage.setItem('pms_user', JSON.stringify(data));
       } else {
-        sessionStorage.setItem('user_pms', JSON.stringify(data));
+        sessionStorage.setItem('pms_user', JSON.stringify(data));
       }
       dispatch(loginReducer(data));
       setLoading(false);

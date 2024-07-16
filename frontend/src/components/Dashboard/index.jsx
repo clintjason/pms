@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { useState } from 'react';
+import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -14,11 +14,17 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
+import { MenuItem, Menu, Avatar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
+import { apiLogout } from '../../services/api.service';
+import store from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout as logoutReducer } from '../../reducers/authSlice';
 
 function Copyright(props) {
   return (
@@ -78,9 +84,44 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function Dashboard() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // Access the auth slice from the Redux store
+  const user = useSelector((state) => state.auth?.user);
+
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfileClick = () => {
+    // Navigate to profile or perform other tasks
+    navigate('/profile')
+    handleMenuClose();
+  };
+
+  const handleLogoutClick = async () => {
+    // Perform logout tasks
+    try {
+      const result = await apiLogout({
+        userId: store.getState().auth.user.id,
+      })
+      console.log("Logout", result);
+      dispatch(logoutReducer());
+      navigate('/signin')
+    } catch (error) {
+      console.error("handleLogoutClick Error: ", error.message)
+    }
+    handleMenuClose();
   };
 
   return (
@@ -119,6 +160,18 @@ export default function Dashboard() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            <IconButton color="inherit" onClick={handleAvatarClick}>
+            <Avatar alt={`${user?.username}'s Avatar`} src={user?.avatar}  sx={{ width: 32, height: 32 }} />
+          </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              sx={{ mt: '15px', '& .MuiMenu-paper': { minWidth: '150px' } }}
+            >
+              <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+              <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -143,16 +196,16 @@ export default function Dashboard() {
         </Drawer>
         <Box
           component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === 'light'
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: '100vh',
+              overflow: 'auto',
+            }}
+          >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             {/* Let the dynamic content come in here */}

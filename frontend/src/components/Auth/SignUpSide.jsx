@@ -5,7 +5,7 @@ import { TextField, Avatar, Typography, FormHelperText, FormControl, FormControl
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import sideImg from '../../assets/pixlr-image-generator-cbe82a4b-0f58-4f73-8391-6048e2faf68a.png';
 import { TextField as FormikTextField, Select as FormikSelect, Checkbox as CheckboxWithLabel} from 'formik-mui';
-import {usernameValildationSchema, passwordValidationSchema, emailValidationSchema, roleValidationSchema, termsAndConditionsValidationSchema   } from '../../utils/ValidationSchemas';
+import {usernameValidationSchema, passwordValidationSchema, emailValidationSchema, roleValidationSchema, termsAndConditionsValidationSchema   } from '../../utils/ValidationSchemas';
 import { signup } from '../../services/api.service';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ function Copyright(props) {
 }
 
 const SignUpSchema = YupObject().shape({
-  username: usernameValildationSchema,
+  username: usernameValidationSchema,
   email: emailValidationSchema,
   password: passwordValidationSchema,
   role: roleValidationSchema,

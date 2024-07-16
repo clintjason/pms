@@ -71,7 +71,7 @@ exports.login = async (req, res) => {
     let valid = await bcrypt.compare(password, user.password);
     if(!valid) {return res.status(401).json({error: `Invalid email or password`});}
     
-    const token = jwt.sign({userId: user.id}, process.env.SECRET_TOKEN, {expiresIn: '24h'})
+    const token = jwt.sign({userId: user.id }, process.env.SECRET_TOKEN, {expiresIn: '24h'})
     
     // Create session
     const expiresAt = new Date();
@@ -97,13 +97,25 @@ exports.login = async (req, res) => {
    }
 }
 
+/**
+  * Logout a User
+  * @param {*} req request object
+  * @param {*} res response object
+  * @returns {*} returns an error Object {error: [error]}  with status code 401
+  * or response object with status code 200 and of the form
+  * {
+  *   message: string,
+  * }
+  * consisting of user id and the jsonweb authentification token.
+  */
 exports.signOut = async (req, res) => {
   const userId = res.locals.userId;
 
   try {
+    const session = await Session.findOne({ where: { user_id: userId}, order: [['createdAt', 'DESC']]})
     // Find the latest active monitoring session for the user
     const monitoringSession = await MonitoringSession.findOne({
-      where: { patient_id: userId, end_time: null },
+      where: { session_id: session.id, end_time: null },
       order: [['start_time', 'DESC']],
     });
 

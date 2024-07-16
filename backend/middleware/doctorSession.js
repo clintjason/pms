@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const models = require('../models');
 const User = models.User;
-
 /**
  * User Authentication Middleware
  * 
@@ -30,10 +29,10 @@ module.exports = async (req, res, next) => {
         if (req.body.userId && (req.body.userId !== userId)) {
             throw 'Invalid UserId';
         } else {
-            /* const user = await User.findByPk(res.locals.userId );
-            if(user.role === 'patient' || user.role === 'admin') {
-            } */
-            next();
+            const user = await User.findByPk(res.locals.userId );
+            if(user.role === 'doctor' || (user.role === 'admin')){
+                next();
+            }
         }
     } catch (error) {
         res.status(401).json({ error: error })

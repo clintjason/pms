@@ -33,7 +33,7 @@ export const passwordValidationSchema = Yup.string()
   .matches(/[0-9]/, 'Password must contain at least one number')
   .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character');
 
-export const usernameValildationSchema = Yup.string()
+export const usernameValidationSchema = Yup.string()
   .required('Username is required')
   .matches(/^[a-zA-Z0-9_.]*$/, 'Username can only contain letters, numbers, underscores, and dots')
   .min(3, 'Username must be at least 3 characters')
@@ -70,3 +70,64 @@ export const feedbackValidationSchema = Yup.string()
 .trim('Username cannot include leading or trailing spaces');
 
 export const termsAndConditionsValidationSchema = Yup.boolean().oneOf([true], 'You must accept the terms and conditions').required('Required');
+
+
+export const ageValidationSchema = Yup.number()
+.integer('Age must be an integer')
+.min(1, 'You must be at least 1 years old')
+.max(150, 'Age cannot exceed 150 years')
+.required('Age is required');
+
+export const genderValidationSchema = Yup.string()
+.oneOf(['Male', 'Female'], 'Invalid gender')
+.required('Gender is required');
+
+export const fullnameValidationSchema = Yup.string()
+.matches(/^[a-zA-Z\s]+$/, 'Full name must only contain letters and spaces')
+.min(3, 'Full name must be at least 3 characters long')
+.max(50, 'Full name cannot exceed 50 characters')
+.required('Full name is required');
+
+export const specializationValidationSchema = Yup.string()
+.matches(/^[a-zA-Z\s]+$/, 'Specialization must only contain letters and spaces')
+.min(3, 'Specialization must be at least 3 characters long')
+.max(50, 'Specialization cannot exceed 50 characters')
+.required('Specialization is required');
+
+export const phoneNumberValidationSchema = Yup.string()
+.matches(/^\+?\d{1,3}[- ]?\(?\d{1,3}\)?[- ]?\d{3,4}[- ]?\d{4}$/, 'Invalid phone number format')
+.required('Phone number is required');
+
+export const addressValidationSchema = Yup.string()
+  .matches(/^[a-zA-Z0-9\s]+$/, 'Address must only contain letters, numbers, and spaces')
+  .min(3, 'Address must be at least 3 characters long')
+  .max(100, 'Address cannot exceed 100 characters')
+  .required('Address is required');
+
+  export const streetValidationSchema = Yup.string()
+  .matches(/^[a-zA-Z0-9\s]+$/, 'Street address must only contain letters, numbers, and spaces')
+  .min(3, 'Street address must be at least 3 characters long')
+  .max(100, 'Street address cannot exceed 100 characters')
+  .required('Street address is required');
+
+export const cityValidationSchema = Yup.string()
+  .matches(/^[a-zA-Z\s]+$/, 'City must only contain letters and spaces')
+  .min(3, 'City must be at least 3 characters long')
+  .max(50, 'City cannot exceed 50 characters')
+  .required('City is required');
+
+export const stateValidationSchema =Yup.string()
+  .matches(/^[a-zA-Z\s]+$/, 'State must only contain letters and spaces')
+  .min(2, 'State must be at least 2 characters long')
+  .max(50, 'State cannot exceed 50 characters')
+  .required('State is required');
+
+export const zipCodeValidationSchema = Yup.string()
+  .matches(/^\d{5}(?:[-\s]?\d{4})?$/, 'Invalid zip code format')
+  .required('Zip code is required');
+    
+export const countryValidationSchema = Yup.string()
+  .matches(/^[a-zA-Z\s]+$/, 'Country must only contain letters and spaces')
+  .min(3, 'Country must be at least 3 characters long')
+  .max(50, 'Country cannot exceed 50 characters')
+  .required('Country is required');

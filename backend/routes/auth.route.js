@@ -99,6 +99,58 @@ authRouter.post('/login', authController.login);
 
 /**
  * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout user request
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The user was successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Bad request
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Unauthorized
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal Server Error
+ */
+authRouter.post('/logout', auth, authController.signOut);
+
+/**
+ * @swagger
  * /auth/{id}/reset-password:
  *   put:
  *     summary: Update the user by the id

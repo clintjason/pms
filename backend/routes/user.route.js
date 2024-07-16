@@ -1,14 +1,14 @@
 const express= require('express');
 const userRouter = express.Router();
-const userController = require('../controllers/user.controller');
+const { updateAvatar, updateEmailUsername, getUser, deleteUser, getUsers, resetPassword } = require('../controllers/user.controller');
 const fileUpload = require('../middleware/fileUpload');
 const auth = require('../middleware/auth');
 
 /**
  * @swagger
- * /user/{id}/edit:
+ * /user/update:
  *   put:
- *     summary: Update the user by the id
+ *     summary: Update the username or email
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -25,7 +25,7 @@ const auth = require('../middleware/auth');
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: The user was updated
+ *         description: The user  email / username were updated
  *         content:
  *           application/json:
  *             schema:
@@ -35,11 +35,70 @@ const auth = require('../middleware/auth');
  *       500:
  *         description: Some error happened
  */
-userRouter.put('/user/:id/edit', auth, fileUpload, userController.updateUser);
+userRouter.put('/update', auth, updateEmailUsername);
 
 /**
  * @swagger
- * /user/:
+ * /user/reset-password:
+ *   put:
+ *     summary: Reset password
+ *     tags: [Users]
+ *     parameters:
+ *       - currentPassword: sring
+ *         newPassword: string
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The password was reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: The password was not found
+ *       500:
+ *         description: Some error happened
+ */
+userRouter.put('/reset-password', auth, resetPassword);
+
+/**
+ * @swagger
+ * /user/update-avatar:
+ *   put:
+ *     summary: Update Avatar
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       200:
+ *         description: The password was reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: The password was not found
+ *       500:
+ *         description: Some error happened
+ */
+userRouter.put('/update-avatar', auth, fileUpload ,updateAvatar);
+
+/**
+ * @swagger
+ * /user:
  *   get:
  *     summary: Returns the list of all the users
  *     tags: [Users]
@@ -53,11 +112,11 @@ userRouter.put('/user/:id/edit', auth, fileUpload, userController.updateUser);
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-userRouter.get('/user/all', auth, userController.getUsers);
+userRouter.get('/all', auth, getUsers);
 
 /**
  * @swagger
- * /user/{id}:
+ * /user/:
  *   get:
  *     summary: Get a single user
  *     tags: [Users]
@@ -71,7 +130,7 @@ userRouter.get('/user/all', auth, userController.getUsers);
  *       500:
  *         description: Some server error
  */
-userRouter.get('/user/:id', auth, userController.getOneUser);
+userRouter.get('/', auth, getUser);
 
 /**
  * @swagger
@@ -89,6 +148,6 @@ userRouter.get('/user/:id', auth, userController.getOneUser);
  *       500:
  *         description: Some server error
  */
-userRouter.delete('/:id/delete', auth, userController.deleteUser);
+userRouter.delete('/:id/delete', auth, deleteUser);
 
 module.exports = userRouter;

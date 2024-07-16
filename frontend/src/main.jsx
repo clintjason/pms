@@ -9,7 +9,7 @@ import store from './store';
 import { login } from './reducers/authSlice'; 
 
 // Load user from storage
-const user = JSON.parse(localStorage.getItem('user_pms')) || JSON.parse(sessionStorage.getItem('user_pms'));
+const user = JSON.parse(localStorage.getItem('pms_user')) || JSON.parse(sessionStorage.getItem('pms_user'));
 if (user) {
   store.dispatch(login(user));
 }

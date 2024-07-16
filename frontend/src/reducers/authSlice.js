@@ -33,8 +33,8 @@ const authSlice = createSlice({
       state.user = null;
       state.session = null;
       state.isAuthenticated = false;
-      localStorage.removeItem("pms_userId");
-      localStorage.removeItem("pms_token");
+      localStorage.removeItem("pms_user");
+      sessionStorage.removeItem("pms_user");
     }
   },
 });

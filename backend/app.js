@@ -6,6 +6,8 @@ const db = require("./models");
 require('dotenv').config();
 const userRoutes = require('./routes/user.route.js');
 const authRoutes = require('./routes/auth.route.js');
+const patientRoutes = require('./routes/patient.route.js');
+const doctorRoutes = require('./routes/doctor.route.js');
 const vitalSignSimulatorRoutes = require('./routes/vitalsignsimulator.route.js');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./swagger');
@@ -28,6 +30,8 @@ db.connection.sync().then(()=> console.log('DB is ready'));
  */
 app.use('/auth/', authRoutes);
 app.use('/user/', userRoutes);
+app.use('/patient/', patientRoutes);
+app.use('/doctor/', doctorRoutes);
 app.use('/vital-sign-simulator-api/', vitalSignSimulatorRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 // Swagger setup

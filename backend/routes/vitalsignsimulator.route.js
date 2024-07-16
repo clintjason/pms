@@ -189,5 +189,7 @@ vitalSignSimulatorRouter.post('/', auth, vitalSignSimulatorCtrl.generateVitalSig
  */
 vitalSignSimulatorRouter.get('/', auth, vitalSignSimulatorCtrl.getAllVitalSigns);
 
+vitalSignSimulatorRouter.get('/patient-vitals?:patient_id', auth, vitalSignSimulatorCtrl.getPatientVitalSigns);
+
 
 module.exports = vitalSignSimulatorRouter;

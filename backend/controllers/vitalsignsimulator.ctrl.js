@@ -175,3 +175,16 @@ exports.getAllVitalSigns = async (req, res) => {
     res.status(500).json({error: error.message});
   }
 }
+
+exports.getPatientVitalSigns = async (req, res) => {
+  try {
+    const patient_id = req.params.patient_id;
+    console.log("Req Params: ", req.params);
+    console.log("Patient Id: ", patient_id);
+    const vitals = await VitalSign.findAll({ where: {patient_id:patient_id }, order: [['createdAt', 'DESC']]});
+    res.status(200).json({ message: "Fetch All Patient Vital Signs Successful", vitals })
+  } catch (error) {
+    console.error("getPatientVitalSigns: ", error);
+    res.status(500).json({error: error.message});
+  }
+}
