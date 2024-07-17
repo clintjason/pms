@@ -14,19 +14,14 @@ const Patient = models.Patient;
 exports.updateDoctor = async (req, res) => {
   try {
     const { fullname, specialization, phone_number, address } = req.body;
-    const userId = res.locals.userId;
+    const userId = req.params.userId;
     
     let doctor = await Doctor.findOne({ where: { doctor_id: userId}});
-
-    console.log('userId: ', userId);
-    console.log('doctor before: ', doctor);
 
     doctor.fullname = fullname;
     doctor.specialization = specialization;
     doctor.phone_number = phone_number;
     doctor.address = address;
-
-    console.log('doctor after: ', doctor);
 
     await doctor.save();
 

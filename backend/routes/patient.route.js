@@ -6,7 +6,7 @@ const doctorSession = require('../middleware/doctorSession');
 
 /**
  * @swagger
- * /patient/update:
+ * /patient/update/:userId:
  *   post:
  *     summary: Update patient request
  *     tags: [Patient]
@@ -44,7 +44,7 @@ const doctorSession = require('../middleware/doctorSession');
  *                   type: string
  *                   example: Internal Server Error
  */
-patientRouter.post('/update', auth, updatePatient);
+patientRouter.put('/update/:userId', auth, updatePatient);
 
 
 /**
@@ -117,6 +117,6 @@ patientRouter.get('/', auth, getPatient);
  *                   type: string
  *                   example: Internal Server Error
  */
-patientRouter.get('/all', doctorSession, getAllPatients);
+patientRouter.get('/all/:search?', doctorSession, getAllPatients);
 
 module.exports = patientRouter;

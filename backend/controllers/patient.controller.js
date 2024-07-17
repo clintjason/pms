@@ -13,22 +13,17 @@ const Op = models.Sequelize.Op;
   */
 exports.updatePatient = async (req, res) => {
   try {
-    console.log('patient update Request: ', req.body);
     const { fullname, age, gender, phone_number, address } = req.body;
-    const userId = res.locals.userId;
+    const userId = req.params.userId;
     
     let patient = await Patient.findOne({ where: { patient_id: userId}});
 
-    console.log('userId: ', userId);
-    console.log('patient before: ', patient);
     // Save User in the database
     patient.fullname = fullname;
     patient.age = age;
     patient.gender = gender;
     patient.phone_number = phone_number;
     patient.address = address;
-
-    console.log('patient after: ', patient);
 
     await patient.save();
 
@@ -82,7 +77,7 @@ exports.getPatient = async (req, res) => {
 exports.getAllPatients = async (req, res) => {
   try {
     const { search } = req.query;
-
+    console.log("req.query ", req.query);
     let whereClause = {};
     if(search) {
       whereClause = {

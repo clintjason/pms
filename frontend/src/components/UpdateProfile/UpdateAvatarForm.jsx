@@ -12,7 +12,7 @@ const ValidatorSchema = YupObject().shape({
   )
 });
 
-const UpdateAvatarForm = () => {
+const UpdateAvatarForm = ({user}) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
@@ -23,7 +23,8 @@ const UpdateAvatarForm = () => {
     try {
       const formData = new FormData();
       formData.append('avatar', values.avatar);
-      let data = await apiUpdateAvatar(formData);
+      const userId = user.id;
+      let data = await apiUpdateAvatar(formData, userId);
       setLoading(false);
       setOpen(true);
       console.log("Data received: " + data);

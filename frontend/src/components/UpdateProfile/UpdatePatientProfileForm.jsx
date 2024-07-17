@@ -15,7 +15,7 @@ const ValidatorSchema = YupObject().shape({
 });
 
 
-export default function UpdatePatientProfileForm () {
+export default function UpdatePatientProfileForm ({user}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
@@ -23,7 +23,8 @@ export default function UpdatePatientProfileForm () {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      await apiUpdatePatientProfile(values);
+      const userId = user.id;
+      await apiUpdatePatientProfile(values, userId);
       setLoading(false);
       setOpen(true);
     } catch (error) {

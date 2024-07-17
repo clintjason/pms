@@ -8,14 +8,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { apiGetUser } from '../../services/api.service';
 import { setUser as setUserReducer } from '../../reducers/userSlice';
 import UpdateProfile from '../UpdateProfile';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Profile = () => {
   const user = useSelector((state) => state.user?.user);
   const [loading, setLoading] = useState(true);
-  //const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
   const dispatch = useDispatch();
+  const location = useLocation();
+  console.log('Location: ', location);
+  const userDataId = location.state?.id;
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUser();
@@ -28,7 +32,11 @@ const Profile = () => {
   const fetchUser = async () => {
     setLoading(true);
     try {
-      const user = await  apiGetUser();
+      const params = new URLSearchParams();
+      if (userDataId) {
+        params.append('userId', userDataId);
+      }
+      const user = userDataId ? await apiGetUser(params.toString()) : await apiGetUser();
       console.log("User", user)
       //setUser(user);
       dispatch(setUserReducer(user));

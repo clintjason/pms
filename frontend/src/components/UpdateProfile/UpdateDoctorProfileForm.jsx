@@ -13,7 +13,7 @@ const ValidatorSchema = YupObject().shape({
   address: addressValidationSchema
 });
 
-const UpdateDoctorProfileForm = () => {
+const UpdateDoctorProfileForm = ({user}) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
@@ -21,7 +21,8 @@ const UpdateDoctorProfileForm = () => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      await apiUpdateDoctorProfile(values);
+      const userId = user.id;
+      await apiUpdateDoctorProfile(values, userId);
       setLoading(false);
       setOpen(true);
     } catch (error) {

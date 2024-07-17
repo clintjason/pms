@@ -19,7 +19,8 @@ const Op = models.Sequelize.Op;
   */
 exports.resetPassword = async (req, res) => {
   try {
-    const userId = res.locals.userId;
+    //const userId = res.locals.userId;
+    const userId = req.params.userId;
 
     const { currentPassword, newPassword } = req.body;
 
@@ -49,8 +50,8 @@ exports.resetPassword = async (req, res) => {
 
 exports.updateAvatar = async (req, res) => {
   try {
-    const userId = res.locals.userId;
-
+    //const userId = res.locals.userId;
+    const userId = req.params.userId;
     if (!req.file) {
       return res.status(400).json({ error: 'Avatar file is required' });
     }
@@ -81,7 +82,8 @@ exports.updateAvatar = async (req, res) => {
  */
 exports.getUser = async (req, res) => {
   try {
-    const userId = res.locals.userId;
+    const id = req.query.userId;
+    const userId = id ? id : res.locals.userId;
     
     const user = await User.findByPk(userId, {
       include: [
@@ -114,8 +116,6 @@ exports.getUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const { search } = req.query;
-    console.log("req.query feat= ", req.query);
-    console.log("Search feat= ", search);
     let whereClause = {};
     if(search) {
       whereClause = {
@@ -147,7 +147,7 @@ exports.getAllUsers = async (req, res) => {
         {
           model: models.Doctor,
           as: 'Doctor',
-          attributes: ['fullname', 'specialization', 'phone_number']
+          attributes: ['fullname', 'specialization', 'phone_number', 'address']
         }
       ]
     });
@@ -169,8 +169,10 @@ exports.getAllUsers = async (req, res) => {
  */
 exports.updateEmailUsername = async (req, res) => {
   try {
-    const userId = res.locals.userId;
+    //const userId = res.locals.userId;
     const { email, username } = req.body;
+    const userId = req.params.userId;
+    console.log("userId: " + userId);
 
     const user = await User.findByPk(userId);
 
@@ -249,4 +251,51 @@ exports.deleteAll = (req, res) => {
   .catch(error => {
     res.status(500).json({ error: !parseInt(error) ? "Some error occurred while removing all Users." : error});
   });
+};
+
+exports.getStats = async (req, res) => {
+  try {
+    console.log("method called");
+    const userCount = await User.count();
+    const doctorCount = await models.Doctor.count();
+    const patientCount = await models.Patient.count();
+    const vitalSignCount = await models.VitalSign.count();
+
+    res.status(200).json({
+      users: userCount,
+      doctors: doctorCount,
+      patients: patientCount,
+      vitalSigns: vitalSignCount
+    });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getCompletedSessions = async (req, res) => {
+  try {
+    const completedSessions = await models.MonitoringSession.findAll({
+      where: {
+        end_time: { [Op.ne]: null }  // assuming end_time being not null indicates completion
+      },
+      include: [
+        {
+          model: Session,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'username', 'email', 'role']
+            }
+          ]
+        },
+      ],
+      order: [['end_time', 'DESC']]
+    });
+
+    res.status(200).json(completedSessions);
+  } catch (error) {
+    console.error('Error fetching completed sessions:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };

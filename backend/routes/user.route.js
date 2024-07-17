@@ -1,9 +1,29 @@
 const express= require('express');
 const userRouter = express.Router();
-const { updateAvatar, updateEmailUsername, getUser, deleteUser, getAllUsers, resetPassword } = require('../controllers/user.controller');
+const { updateAvatar, updateEmailUsername, getUser, getCompletedSessions, deleteUser, getAllUsers, resetPassword, getStats } = require('../controllers/user.controller');
 const fileUpload = require('../middleware/fileUpload');
 const auth = require('../middleware/auth');
 const adminSession = require('../middleware/adminSession');
+
+/**
+ * @swagger
+ * /user/stats:
+ *   get:
+ *     summary: Get a stats 
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: The stats was fetched
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Some server error
+ */
+userRouter.get('/stats', adminSession, getStats);
+
+userRouter.get('/monitored-sessions', adminSession, getCompletedSessions);
 
 /**
  * @swagger
@@ -36,7 +56,7 @@ const adminSession = require('../middleware/adminSession');
  *       500:
  *         description: Some error happened
  */
-userRouter.put('/update', auth, updateEmailUsername);
+userRouter.put('/update/:userId', auth, updateEmailUsername);
 
 /**
  * @swagger
@@ -69,7 +89,7 @@ userRouter.put('/update', auth, updateEmailUsername);
  *       500:
  *         description: Some error happened
  */
-userRouter.put('/reset-password', auth, resetPassword);
+userRouter.put('/reset-password/:userId', auth, resetPassword);
 
 /**
  * @swagger
@@ -95,7 +115,7 @@ userRouter.put('/reset-password', auth, resetPassword);
  *       500:
  *         description: Some error happened
  */
-userRouter.put('/update-avatar', auth, fileUpload ,updateAvatar);
+userRouter.put('/update-avatar/:userId', auth, fileUpload ,updateAvatar);
 
 /**
  * @swagger
@@ -131,7 +151,7 @@ userRouter.get('/all/:search?', adminSession, getAllUsers);
  *       500:
  *         description: Some server error
  */
-userRouter.get('/', auth, getUser);
+userRouter.get('/:userId?', auth, getUser);
 
 /**
  * @swagger

@@ -10,13 +10,16 @@ const DoctorProfile = ({ doctor }) => {
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="body1"><strong>Full Name:</strong> {doctor.fullname}</Typography>
+            <Typography variant="body1"><strong>Full Name:</strong> {doctor?.fullname}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="body1"><strong>Specialization:</strong> {doctor.specialization}</Typography>
+            <Typography variant="body1"><strong>Specialization:</strong> {doctor?.specialization}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="body1"><strong>Phone Number:</strong> {doctor.phone_number}</Typography>
+            <Typography variant="body1"><strong>Phone Number:</strong> {doctor?.phone_number}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1"><strong>Address:</strong> {doctor?.address}</Typography>
           </Grid>
         </Grid>
       </CardContent>

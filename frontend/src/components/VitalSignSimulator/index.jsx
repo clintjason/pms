@@ -6,31 +6,31 @@ import VitalSignChart from './VitalSignChart';
 import { apiGetPatientVitalSigns } from '../../services/api.service';
 import { useSelector} from 'react-redux';
 
-const VitalSignSimulator = () => {
+const VitalSignSimulator = ({user}) => {
   const [vitalSigns, setVitalSigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
-  const patientId = useSelector((state) => state.auth?.user?.id);
-  //console.log("Now: ", patientId);
+  const userId = user?.id;
+  const patientId = userId ? userId : useSelector((state) => state.auth?.user?.id);
 
   useEffect(() => {
-    fetchPatientVitalSigns(patientId);
-  }, [patientId]);
+    fetchPatientVitalSigns(userId || patientId);
+  }, [patientId, userId]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleRefresh = () => {
-    fetchPatientVitalSigns(patientId);
+    fetchPatientVitalSigns(userId ||patientId);
   };
 
   const fetchPatientVitalSigns = async (patientId) => {
     setLoading(true);
     try {
       console.log("PatientID in Vitals: ", patientId);
-      const data = { patientId: patientId }
+      const data = { patientId: userId ? userId : patientId }
       const vitals = await apiGetPatientVitalSigns(data);
       console.log("Vitals", vitals)
       setVitalSigns(vitals);
@@ -56,6 +56,7 @@ const VitalSignSimulator = () => {
           </Paper>
         </Grid>
         {/* Vital Sign Simulator */}
+        {!userId &&
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
             <Typography component="h2" variant="h6" color="primary" gutterBottom sx={{mb:2}}>
@@ -64,6 +65,7 @@ const VitalSignSimulator = () => {
             <VitalSignForm />
           </Paper>
         </Grid>
+        }
         {/* Vital Sign Table */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>

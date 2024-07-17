@@ -155,7 +155,7 @@ vitalSignSimulatorRouter.post('/', auth, vitalSignSimulatorCtrl.generateVitalSig
 
 /**
  * @swagger
- * /vital-sign-simulator-api
+ * /vital-sign-simulator-api:
  *   get:
  *     summary: Get all Vital Signs
  *     tags: [Vital Sign Simulator]
@@ -191,7 +191,7 @@ vitalSignSimulatorRouter.get('/', auth, vitalSignSimulatorCtrl.getAllVitalSigns)
 
 /**
  * @swagger
- * /vital-sign-simulator-api/patient-vitals
+ * /vital-sign-simulator-api/patient-vitals:
  *   post:
  *     summary: Get a patient Vital Signs
  *     tags: [Vital Sign Simulator]

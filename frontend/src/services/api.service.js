@@ -36,7 +36,7 @@ export const apiVitalSignSimulator = (data) => api.post(import.meta.env.VITE_DEV
     throw error;
   })
 
-export const apiUpdatePatientProfile = (data) => api.post(import.meta.env.VITE_DEV_BASE_URL + `patient/update`, data)
+export const apiUpdatePatientProfile = (data, userId) => api.put(import.meta.env.VITE_DEV_BASE_URL + `patient/update/${userId}`, data)
   .then(response => {
     return response.data;
   })
@@ -45,7 +45,7 @@ export const apiUpdatePatientProfile = (data) => api.post(import.meta.env.VITE_D
     throw error;
   })
 
-export const apiUpdateDoctorProfile = (data) => api.post(import.meta.env.VITE_DEV_BASE_URL + `doctor/update`, data)
+export const apiUpdateDoctorProfile = (data, userId) => api.put(import.meta.env.VITE_DEV_BASE_URL + `doctor/update/${userId}`, data)
   .then(response => {
     return response.data;
   })
@@ -54,7 +54,7 @@ export const apiUpdateDoctorProfile = (data) => api.post(import.meta.env.VITE_DE
     throw error;
   })
 
-export const apiUpdateAvatar = (data) => api.put(import.meta.env.VITE_DEV_BASE_URL + `user/update-avatar`, data)
+export const apiUpdateAvatar = (data, userId) => api.put(import.meta.env.VITE_DEV_BASE_URL + `user/update-avatar/${userId}`, data)
   .then(response => {
     return response.data;
   })
@@ -63,7 +63,7 @@ export const apiUpdateAvatar = (data) => api.put(import.meta.env.VITE_DEV_BASE_U
     throw error;
   })
 
-export const apiUpdateUser = (data) => api.put(import.meta.env.VITE_DEV_BASE_URL + `user/update`, data)
+export const apiUpdateUser = (data, userId) => api.put(import.meta.env.VITE_DEV_BASE_URL + `user/update/${userId}`, data)
   .then(response => {
     return response.data;
   })
@@ -72,7 +72,16 @@ export const apiUpdateUser = (data) => api.put(import.meta.env.VITE_DEV_BASE_URL
     throw error;
   })
 
-export const apiResetPassword = (data) => api.put(import.meta.env.VITE_DEV_BASE_URL + `user/reset-password`, data)
+  export const apiGetCompletedSessions = () => api.get(import.meta.env.VITE_DEV_BASE_URL + `user/monitored-sessions`)
+  .then(response => {
+    return response.data;
+  })
+  .catch(error => {
+    console.error("Update user api endpoint error:", error);
+    throw error;
+  })
+
+export const apiResetPassword = (data, userId) => api.put(import.meta.env.VITE_DEV_BASE_URL + `user/reset-password/${userId}`, data)
   .then(response => {
     return response.data;
   })
@@ -106,7 +115,7 @@ export const apiGetPatientVitalSigns = (patient_id) => api.post(import.meta.env.
     throw error;
   })
 
-export const apiGetUser = () => api.get(import.meta.env.VITE_DEV_BASE_URL +  `user`)
+export const apiGetUser = (userId) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `user/?${userId}`)
 .then(response => {
   return response.data;
 })
@@ -133,7 +142,16 @@ export const apiGetPatient = () => api.get(import.meta.env.VITE_DEV_BASE_URL +  
   throw error;
 })
 
-export const apiGetAllPatients = (query) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `patient/all/${query}`)
+export const apiGetStats = () => api.get(import.meta.env.VITE_DEV_BASE_URL +  `user/stats`)
+.then(response => {
+  return response.data;
+})
+.catch(error => {
+  console.error("apiGetStats Error: ", error);
+  throw error;
+})
+
+export const apiGetAllPatients = (query) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `patient/all/?${query}`)
 .then(response => {
   return response.data;
 })

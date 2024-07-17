@@ -14,7 +14,7 @@ const ValidatorSchema = Yup.object().shape({
   .required('Confirm password is required'),
 });
 
-const ResetPasswordForm = () => {
+const ResetPasswordForm = ({user}) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +22,8 @@ const ResetPasswordForm = () => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      await apiResetPassword(values);
+      const userId = user.id;
+      await apiResetPassword(values, userId);
       setLoading(false);
       setOpen(true);
     } catch (error) {

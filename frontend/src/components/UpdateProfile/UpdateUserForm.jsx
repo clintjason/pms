@@ -11,7 +11,7 @@ const ValidatorSchema = YupObject().shape({
   username: usernameValidationSchema
 });
 
-export default function UpdateUserForm () {
+export default function UpdateUserForm ({user}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
@@ -19,7 +19,9 @@ export default function UpdateUserForm () {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      let data = await apiUpdateUser(values);
+      const payload = {...values, userId: user.id}
+      console.log(payload);
+      await apiUpdateUser(values, user.id);
       setLoading(false);
       setOpen(true);
     } catch (error) {
