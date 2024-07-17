@@ -113,7 +113,7 @@ userRouter.put('/update-avatar', auth, fileUpload ,updateAvatar);
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-userRouter.get('/all', adminSession, getAllUsers);
+userRouter.get('/all/:search?', adminSession, getAllUsers);
 
 /**
  * @swagger

@@ -142,7 +142,7 @@ export const apiGetAllPatients = (query) => api.get(import.meta.env.VITE_DEV_BAS
   throw error;
 })
 
-export const apiGetAllUsers = (query) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `user/all/${query}`)
+export const apiGetAllUsers = (query) => api.get(import.meta.env.VITE_DEV_BASE_URL +  `user/all/?${query}`)
 .then(response => {
   return response.data;
 })

@@ -114,6 +114,8 @@ exports.getUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const { search } = req.query;
+    console.log("req.query feat= ", req.query);
+    console.log("Search feat= ", search);
     let whereClause = {};
     if(search) {
       whereClause = {
@@ -121,18 +123,19 @@ exports.getAllUsers = async (req, res) => {
           { username: { [Op.like]: `%${search}%` } },
           { email: { [Op.like]: `%${search}%` } },
           { role: { [Op.like]: `%${search}%` } },
-          /* { '$Patient.fullname$': { [Op.like]: `%${search}%` } },
+          { '$Patient.fullname$': { [Op.like]: `%${search}%` } },
           { '$Patient.age$': { [Op.like]: `%${search}%` } },
           { '$Patient.gender$': { [Op.like]: `%${search}%` } },
           { '$Patient.phone_number$': { [Op.like]: `%${search}%` } },
           { '$Patient.address$': { [Op.like]: `%${search}%` } },
           { '$Doctor.fullname$': { [Op.like]: `%${search}%` } },
           { '$Doctor.specialization$': { [Op.like]: `%${search}%` } },
-          { '$Doctor.phone_number$': { [Op.like]: `%${search}%` } }, */
+          { '$Doctor.phone_number$': { [Op.like]: `%${search}%` } },
         ]
       };
     }
 
+    console.log(" where clause : ", whereClause);
     const users = await User.findAll({
       where: whereClause,
       include: [
