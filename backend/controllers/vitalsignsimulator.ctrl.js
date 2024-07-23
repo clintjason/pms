@@ -1,5 +1,6 @@
 const models = require("../models");
 const VitalSign = models.VitalSign;
+const sendNotification = require('../websocket');
 
 /*
   Oral temperature: 35.5°C to 37.5°C
@@ -159,6 +160,7 @@ exports.generateVitalSigns = async (req, res) => {
     }
     
     const vitals = await VitalSign.create(data);
+    await checkForAlerts(vitals, res.locals.userId)
     res.status(200).json({ message: "Vital Signs Simulation Successful", vitals })
   } catch (error) {
     console.error("VSG Error: ", error);
@@ -188,3 +190,28 @@ exports.getPatientVitalSigns = async (req, res) => {
     res.status(500).json({error: error.message});
   }
 }
+
+// Define your alert conditions
+const alertConditions = {
+  heartRate: { min: 60, max: 100 },
+  bloodPressure: { min: 60, max: 120 },
+  temperature: { min: 35, max: 38},
+};
+
+const checkForAlerts = (vitalSigns, userId) => {
+  let notifications = [];
+  if (vitalSigns.heartRate < alertConditions.heartRate.min || vitalSigns.heartRate > alertConditions.heartRate.max) {
+    notifications.push({ type: "Heart Rate", message: `Heart rate is out of range: ${vitalSigns.heartRate}`, userId});
+  }
+  if (vitalSigns.temperature < alertConditions.temperature.min || vitalSigns.temperature > alertConditions.temperature.max) {
+    notifications.push({type: "Temperature", message: `Temperature is out of range: ${vitalSigns.temperature}`, userId});
+  }
+  if (vitalSigns.bloodPressure < alertConditions.bloodPressure.min || vitalSigns.bloodPressure > alertConditions.bloodPressure.max) {
+    notifications.push({ type: "Blood pressure", message: `Blood pressure is out of range: ${vitalSigns.bloodPressure}`, userId});
+  }
+  notifications.forEach(async (notification) => {
+    await models.Notification.create(notification);
+    sendNotification(userId, notification);
+  });
+  return notifications;
+};

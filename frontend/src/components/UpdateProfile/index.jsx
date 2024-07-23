@@ -7,7 +7,6 @@ import UpdateAvatarForm from './UpdateAvatarForm';
 import ResetPasswordForm from './ResetPasswordForm';
 
 const UpdateProfile = ({user}) => {
-  console.log("UpdateProfile USER: ", user)
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Grid container spacing={3}>

@@ -47,8 +47,8 @@ const UserTable = ({onRowClick}) => {
   }
 
   const handleViewMedicalHistory = (user) => {
-    console.log('The user-hey: ', user)
-    navigate('/vital-sign-simulator', { state: user });
+    console.log(user);
+    navigate(`/vital-sign-simulator?patient_Id=${user.id}`);
   }
 
   const fetchUsers = async () => {

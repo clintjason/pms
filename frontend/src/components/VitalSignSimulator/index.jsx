@@ -5,32 +5,35 @@ import VitalSignForm from './VitalSignForm';
 import VitalSignChart from './VitalSignChart';
 import { apiGetPatientVitalSigns } from '../../services/api.service';
 import { useSelector} from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
-const VitalSignSimulator = ({user}) => {
+const VitalSignSimulator = () => {
   const [vitalSigns, setVitalSigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
-  const userId = user?.id;
-  const patientId = userId ? userId : useSelector((state) => state.auth?.user?.id);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const patientIdFromUrl = searchParams.get('patient_Id');
+  const patientId = useSelector((state) => state.auth?.user?.id);
 
   useEffect(() => {
-    fetchPatientVitalSigns(userId || patientId);
-  }, [patientId, userId]);
+    fetchPatientVitalSigns(patientId);
+  }, [patientId, patientIdFromUrl]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleRefresh = () => {
-    fetchPatientVitalSigns(userId ||patientId);
+    fetchPatientVitalSigns(patientId);
   };
 
   const fetchPatientVitalSigns = async (patientId) => {
     setLoading(true);
     try {
       console.log("PatientID in Vitals: ", patientId);
-      const data = { patientId: userId ? userId : patientId }
+      const data = { patientId: patientIdFromUrl ? patientIdFromUrl : patientId }
       const vitals = await apiGetPatientVitalSigns(data);
       console.log("Vitals", vitals)
       setVitalSigns(vitals);
@@ -56,7 +59,7 @@ const VitalSignSimulator = ({user}) => {
           </Paper>
         </Grid>
         {/* Vital Sign Simulator */}
-        {!userId &&
+        {!patientIdFromUrl &&
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
             <Typography component="h2" variant="h6" color="primary" gutterBottom sx={{mb:2}}>

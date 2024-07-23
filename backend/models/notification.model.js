@@ -3,11 +3,13 @@ module.exports = (sequelize, DataTypes) => {
 	const Notification = sequelize.define(
 		"Notification",
 		{
-      notification_id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-        allowNull: false
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      message: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       is_read: {
         type: DataTypes.BOOLEAN,

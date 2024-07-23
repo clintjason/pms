@@ -52,6 +52,7 @@ export default function SignInSide() {
       dispatch(loginReducer(data));
       setLoading(false);
       navigate('/');
+      //setTimeout(()=>navigate('/'), 2000 )
     } catch (error) {
       console.error("Signin Error: ", error);
       setLoading(false);
