@@ -1,24 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
-import { MenuItem, Menu, Avatar } from '@mui/material';
+import MuiDrawer from '@mui/material/Drawer';
+import { CssBaseline, Badge, Box, Container, IconButton, MenuItem, Menu, Toolbar, Divider, Avatar, List, ListItem, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
+import { MainListItems, secondaryListItems } from './listItems';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
 import { apiLogout } from '../../services/api.service';
 import store from '../../store';
@@ -84,12 +72,27 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function Dashboard() {
+  const notifications = useSelector((state) => state.notifications.notifications);
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [audio] = useState(new Audio('../../level-up-191997.mp3'));
+
   // Access the auth slice from the Redux store
   const user = useSelector((state) => state.auth?.user);
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      const latestNotification = notifications[notifications.length - 1];
+      setSnackbarMessage(latestNotification.message);
+      setOpenSnackbar(true);
+      audio.play();
+    }
+  }, [notifications]);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -124,6 +127,19 @@ export default function Dashboard() {
     handleMenuClose();
   };
 
+  const handleNotificationClick = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
+  const handleClearNotifications = () => {
+    dispatch(clearNotifications());
+    handleDialogClose();
+  };
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
@@ -155,8 +171,8 @@ export default function Dashboard() {
             >
               Dashboard
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
+            <IconButton color="inherit" onClick={handleNotificationClick}>
+              <Badge badgeContent={notifications.length} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -173,6 +189,27 @@ export default function Dashboard() {
               <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
             </Menu>
           </Toolbar>
+          <Snackbar
+            open={openSnackbar}
+            onClose={() => setOpenSnackbar(false)}
+            message={snackbarMessage}
+            autoHideDuration={6000}
+          />
+
+          <Dialog open={openDialog} onClose={handleDialogClose}>
+            <DialogTitle>Notifications</DialogTitle>
+            <DialogContent>
+              <List>
+                {notifications?.map((notification, index) => (
+                  <ListItem key={index}>{notification.message}</ListItem>
+                ))}
+              </List>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClearNotifications} color="primary">Clear</Button>
+              <Button onClick={handleDialogClose} color="primary">Close</Button>
+            </DialogActions>
+          </Dialog>
         </AppBar>
         <Drawer variant="permanent" open={open}>
           <Toolbar
@@ -189,7 +226,7 @@ export default function Dashboard() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <MainListItems />
             <Divider sx={{ my: 1 }} />
             {secondaryListItems}
           </List>

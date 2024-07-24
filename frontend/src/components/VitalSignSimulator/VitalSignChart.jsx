@@ -2,7 +2,7 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { Typography } from '@mui/material';
+import {Typography } from '@mui/material';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -59,7 +59,7 @@ const VitalSignChart = ({ vitalSigns, loading }) => {
       {vitalSigns.length > 0 ? 
         <Line data={chartData} />
       :
-      <Typography component="body2" variant="subtitle2" gutterBottom>
+      <Typography variant="subtitle2" gutterBottom>
         No chart data available
       </Typography>
     }

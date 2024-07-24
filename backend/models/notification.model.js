@@ -14,13 +14,14 @@ module.exports = (sequelize, DataTypes) => {
       is_read: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
       },
 		},
 		{timestamps:true}
 	)
   Notification.associate = function(models) {
     Notification.belongsTo(models.User, { foreignKey: 'user_id' });
-    Notification.belongsTo(models.Message, { foreignKey: 'message_id' });
+    //Notification.belongsTo(models.Message, { foreignKey: 'message_id' });
   };
 	return Notification;
 }

@@ -12,6 +12,9 @@ import Users from './components/Users/index.jsx';
 import Alerts from './components/Alerts/index.jsx';
 import UpdateProfile from './components/UpdateProfile/index.jsx';
 import Profile from './components/Profile/index.jsx';
+import NotFound from './components/NotFound/index.jsx';
+import HelpfulResources from './components/HelpfulResources/index.jsx';
+import Questions from './components/Questions/index.jsx';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,16 +25,18 @@ function App() {
         <Route path="/" element={<Dashboard />}>
           <Route index element={<DefaultComponent />} /> 
           <Route path="vital-sign-simulator" element={<VitalSignSimulator />} />
-          <Route path="reports" element={<Reports />} />
+          <Route path="*" element={<NotFound />} />
           <Route path="patients" element={<Patients />} />
           <Route path="update/profile" element={<UpdateProfile />} />
           <Route path="users" element={<Users />} />
           <Route path="profile" element={<Profile />} />
           <Route path="alerts" element={<Alerts />} />
+          <Route path="helpful-resources" element={<HelpfulResources />} />
+          <Route path="questions" element={<Questions />} />
         </Route>
         <Route path="/signin" element={<SignInSide />} />
         <Route path="/signup" element={<SignUpSide />} />
-        <Route path="/signout" element={<SignOut />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   )

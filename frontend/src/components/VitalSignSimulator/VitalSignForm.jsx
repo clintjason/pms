@@ -75,7 +75,7 @@ const VitalSignForm = () => {
                 <Field
                   component={FormikSelect}
                   name="temperatureType"
-                  labelId="temperature-TYPE-label"
+                  labelid="temperature-TYPE-label"
                   label="Temperature Type"
                   fullWidth
                 >
@@ -92,7 +92,7 @@ const VitalSignForm = () => {
                 <Field
                   component={FormikSelect}
                   name="symptoms"
-                  labelId="symptoms-label"
+                  labelid="symptoms-label"
                   label="Symptoms"
                   multiple
                   fullWidth
@@ -108,7 +108,7 @@ const VitalSignForm = () => {
                 <Field
                   component={FormikSelect}
                   name="condition_before_taking_vital_signs"
-                  labelId="condition_before_taking_vital_signs-label"
+                  labelid="condition_before_taking_vital_signs-label"
                   label="Condition before taking your vitals"
                   multiple
                   fullWidth
@@ -124,7 +124,7 @@ const VitalSignForm = () => {
                 <Field
                   component={FormikTextField}
                   name="feedback"
-                  labelId="feedback-label"
+                  labelid="feedback-label"
                   label="Feedback"
                   multiline
                   rows={4}

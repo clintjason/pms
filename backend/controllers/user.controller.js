@@ -299,3 +299,33 @@ exports.getCompletedSessions = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+exports.getCompletedUserSessions = async (req, res) => {
+  try {
+    console.log("Session Id: ", res.locals.sessionId);
+    const completedSessions = await models.MonitoringSession.findAll({
+      where: {
+        end_time: { [Op.ne]: null },
+        session_id: res.locals.sessionId
+      },
+      include: [
+        {
+          model: Session,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'username', 'email', 'role']
+            }
+          ]
+        },
+      ],
+      order: [['end_time', 'DESC']]
+    });
+
+    console.log("Completed Sessions: ", completedSessions)
+    res.status(200).json(completedSessions);
+  } catch (error) {
+    console.error('Error fetching completed sessions:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

@@ -80,6 +80,15 @@ export const apiUpdateUser = (data, userId) => api.put(import.meta.env.VITE_DEV_
     console.error("Update user api endpoint error:", error);
     throw error;
   })
+  
+  export const apiGetUserCompletedSessions = () => api.get(import.meta.env.VITE_DEV_BASE_URL + `user/user-monitored-sessions`)
+  .then(response => {
+    return response.data;
+  })
+  .catch(error => {
+    console.error("Update user api endpoint error:", error);
+    throw error;
+  })
 
 export const apiResetPassword = (data, userId) => api.put(import.meta.env.VITE_DEV_BASE_URL + `user/reset-password/${userId}`, data)
   .then(response => {

@@ -160,6 +160,7 @@ exports.generateVitalSigns = async (req, res) => {
     }
     
     const vitals = await VitalSign.create(data);
+    console.log("vitals: ", vitals)
     await checkForAlerts(vitals, res.locals.userId)
     res.status(200).json({ message: "Vital Signs Simulation Successful", vitals })
   } catch (error) {
@@ -194,24 +195,29 @@ exports.getPatientVitalSigns = async (req, res) => {
 // Define your alert conditions
 const alertConditions = {
   heartRate: { min: 60, max: 100 },
-  bloodPressure: { min: 60, max: 120 },
-  temperature: { min: 35, max: 38},
+  respiratoryRate: { min: 60, max: 120 },
+  temperature: { min: 35.7, max: 37.8},
 };
 
 const checkForAlerts = (vitalSigns, userId) => {
+  console.log("IN checkForAlerts");
+
   let notifications = [];
-  if (vitalSigns.heartRate < alertConditions.heartRate.min || vitalSigns.heartRate > alertConditions.heartRate.max) {
-    notifications.push({ type: "Heart Rate", message: `Heart rate is out of range: ${vitalSigns.heartRate}`, userId});
+  if (vitalSigns.heart_rate < alertConditions.heartRate.min || vitalSigns.heart_rate > alertConditions.heartRate.max) {
+    notifications.push({ type: "Heart Rate", message: `Heart rate is out of range: ${vitalSigns.heart_rate}`, userId});
   }
   if (vitalSigns.temperature < alertConditions.temperature.min || vitalSigns.temperature > alertConditions.temperature.max) {
     notifications.push({type: "Temperature", message: `Temperature is out of range: ${vitalSigns.temperature}`, userId});
   }
-  if (vitalSigns.bloodPressure < alertConditions.bloodPressure.min || vitalSigns.bloodPressure > alertConditions.bloodPressure.max) {
-    notifications.push({ type: "Blood pressure", message: `Blood pressure is out of range: ${vitalSigns.bloodPressure}`, userId});
+  if (vitalSigns.respiration_rate < alertConditions.respiratoryRate.min || vitalSigns.respiration_rate > alertConditions.respiratoryRate.max) {
+    notifications.push({ type: "Respiratory Rate", message: `Respiration rate is out of range: ${vitalSigns.respiration_rate}`, userId});
   }
-  notifications.forEach(async (notification) => {
-    await models.Notification.create(notification);
-    sendNotification(userId, notification);
-  });
+  if( notifications.length > 0 ) {
+    console.log("IN THE CHECK");
+    notifications.forEach(async (notification) => {
+      await models.Notification.create({...notification, user_id: userId});
+      sendNotification(userId, notification);
+    });
+  }
   return notifications;
 };

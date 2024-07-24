@@ -1,6 +1,6 @@
 const express= require('express');
 const userRouter = express.Router();
-const { updateAvatar, updateEmailUsername, getUser, getCompletedSessions, deleteUser, getAllUsers, resetPassword, getStats } = require('../controllers/user.controller');
+const { updateAvatar, updateEmailUsername, getUser, getCompletedSessions, getCompletedUserSessions, deleteUser, getAllUsers, resetPassword, getStats } = require('../controllers/user.controller');
 const fileUpload = require('../middleware/fileUpload');
 const auth = require('../middleware/auth');
 const adminSession = require('../middleware/adminSession');
@@ -24,6 +24,8 @@ const adminSession = require('../middleware/adminSession');
 userRouter.get('/stats', adminSession, getStats);
 
 userRouter.get('/monitored-sessions', adminSession, getCompletedSessions);
+
+userRouter.get('/user-monitored-sessions', auth, getCompletedUserSessions);
 
 /**
  * @swagger
