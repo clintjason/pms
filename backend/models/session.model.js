@@ -14,7 +14,7 @@ module.exports = (sequelizeConnection, DataTypes) => {
   });
   Session.associate = function (models) {
     Session.belongsTo(models.User, { foreignKey: 'user_id' });
-    Session.hasMany(models.MonitoringSession, { foreignKey: 'session_id' });
+    //Session.hasMany(models.MonitoringSession, { foreignKey: 'session_id' });
   }
   return Session;
 }

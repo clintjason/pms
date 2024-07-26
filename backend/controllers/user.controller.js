@@ -281,13 +281,8 @@ exports.getCompletedSessions = async (req, res) => {
       },
       include: [
         {
-          model: Session,
-          include: [
-            {
-              model: User,
-              attributes: ['id', 'username', 'email', 'role']
-            }
-          ]
+          model: User,
+          attributes: ['id', 'username', 'email', 'role']
         },
       ],
       order: [['end_time', 'DESC']]
@@ -302,21 +297,16 @@ exports.getCompletedSessions = async (req, res) => {
 
 exports.getCompletedUserSessions = async (req, res) => {
   try {
-    console.log("Session Id: ", res.locals.sessionId);
+    console.log("User Id: ", res.locals.userId);
     const completedSessions = await models.MonitoringSession.findAll({
       where: {
         end_time: { [Op.ne]: null },
-        session_id: res.locals.sessionId
+        user_id: res.locals.userId
       },
       include: [
         {
-          model: Session,
-          include: [
-            {
-              model: User,
-              attributes: ['id', 'username', 'email', 'role']
-            }
-          ]
+          model: User,
+          attributes: ['id', 'username', 'email']
         },
       ],
       order: [['end_time', 'DESC']]

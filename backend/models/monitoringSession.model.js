@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
 		{timestamps:true}
 	)
   MonitoringSession.associate = function(models) {
-    MonitoringSession.belongsTo(models.Session, { foreignKey: 'session_id' });
+    //MonitoringSession.belongsTo(models.Session, { foreignKey: 'session_id' });
+    MonitoringSession.belongsTo(models.User, { foreignKey: 'user_id' });
     MonitoringSession.hasMany(models.VitalSign, { foreignKey: 'monitoring_session_id' });
   };
 	return MonitoringSession;

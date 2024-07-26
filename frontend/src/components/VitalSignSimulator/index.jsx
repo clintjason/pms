@@ -32,10 +32,8 @@ const VitalSignSimulator = () => {
   const fetchPatientVitalSigns = async (patientId) => {
     setLoading(true);
     try {
-      console.log("PatientID in Vitals: ", patientId);
       const data = { patientId: patientIdFromUrl ? patientIdFromUrl : patientId }
       const vitals = await apiGetPatientVitalSigns(data);
-      console.log("Vitals", vitals)
       setVitalSigns(vitals);
       setLoading(false);
       setOpen(true);

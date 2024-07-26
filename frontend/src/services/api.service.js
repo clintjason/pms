@@ -50,7 +50,7 @@ export const apiUpdateDoctorProfile = (data, userId) => api.put(import.meta.env.
     return response.data;
   })
   .catch(error => {
-    console.error("Update doctor profile api endpoint error:", error);
+    console.error("apiUpdateDoctorProfile api endpoint error:", error);
     throw error;
   })
 
@@ -59,7 +59,7 @@ export const apiUpdateAvatar = (data, userId) => api.put(import.meta.env.VITE_DE
     return response.data;
   })
   .catch(error => {
-    console.error("Update avatar api endpoint error:", error);
+    console.error("apiUpdateAvatar endpoint error:", error);
     throw error;
   })
 
@@ -68,7 +68,7 @@ export const apiUpdateUser = (data, userId) => api.put(import.meta.env.VITE_DEV_
     return response.data;
   })
   .catch(error => {
-    console.error("Update user api endpoint error:", error);
+    console.error("apiUpdateUser endpoint error:", error);
     throw error;
   })
 
@@ -77,7 +77,7 @@ export const apiUpdateUser = (data, userId) => api.put(import.meta.env.VITE_DEV_
     return response.data;
   })
   .catch(error => {
-    console.error("Update user api endpoint error:", error);
+    console.error("apiGetCompletedSessions endpoint error:", error);
     throw error;
   })
   
@@ -86,7 +86,7 @@ export const apiUpdateUser = (data, userId) => api.put(import.meta.env.VITE_DEV_
     return response.data;
   })
   .catch(error => {
-    console.error("Update user api endpoint error:", error);
+    console.error("apiGetUserCompletedSessions endpoint error:", error);
     throw error;
   })
 

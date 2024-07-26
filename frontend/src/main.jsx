@@ -7,7 +7,8 @@ import theme from './theme';
 import { Provider } from 'react-redux';
 import store from './store';
 import { login } from './reducers/authSlice'; 
-import WebSocketClient from './websocket/websocket.js';
+import './websocket/websocket.js';
+import './index.css';
 
 // Load user from storage
 const user = JSON.parse(localStorage.getItem('pms_user')) || JSON.parse(sessionStorage.getItem('pms_user'));

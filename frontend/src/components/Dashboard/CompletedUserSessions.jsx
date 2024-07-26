@@ -42,7 +42,7 @@ const CompletedUserSessions = () => {
     <Box>
       <Grid container alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
         <Grid item>
-          <Typography variant="h6" color="primary">Completed Sessions</Typography>
+          <Typography variant="h6" color="primary">Logged In Sessions</Typography>
         </Grid>
         <Grid item>
           <Tooltip title="Refresh">
@@ -62,20 +62,18 @@ const CompletedUserSessions = () => {
                 <TableCell>ID</TableCell>
                 <TableCell>User Name</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>User Role</TableCell>
                 <TableCell>Start Time</TableCell>
                 <TableCell>End Time</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {sessions.map((session) => (
-                <TableRow key={session.id}>
-                  <TableCell>{session.id}</TableCell>
-                  <TableCell>{session.Session.User.username}</TableCell>
-                  <TableCell>{session.Session.User.email}</TableCell>
-                  <TableCell>{session.Session.User.role}</TableCell>
-                  <TableCell>{new Date(session.start_time).toLocaleString()}</TableCell>
-                  <TableCell>{new Date(session.end_time).toLocaleString()}</TableCell>
+                <TableRow key={session?.id}>
+                  <TableCell>{session?.id}</TableCell>
+                  <TableCell>{session?.User?.username}</TableCell>
+                  <TableCell>{session?.User?.email}</TableCell>
+                  <TableCell>{new Date(session?.start_time).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(session?.end_time).toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -84,7 +82,7 @@ const CompletedUserSessions = () => {
       )}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Completed sessions fetched successfully!
+          Logged-In sessions fetched successfully!
         </Alert>
       </Snackbar>
       {error && (

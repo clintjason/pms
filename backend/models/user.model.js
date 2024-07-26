@@ -38,6 +38,7 @@ module.exports = (sequelizeConnection, DataTypes) => {
         User.hasMany(models.Message, { as: 'ReceivedMessages', foreignKey: 'receiver_id' });
         User.hasMany(models.Notification, { foreignKey: 'user_id' });
         User.hasMany(models.Session, { foreignKey: 'user_id' });
+        User.hasMany(models.MonitoringSession, { foreignKey: 'user_id' });
       };
       return User;
     };

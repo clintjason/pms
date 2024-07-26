@@ -87,7 +87,7 @@ exports.login = async (req, res) => {
     console.log("Session: ", session);
     // Create a new monitoring session
     const monitoringSession = await MonitoringSession.create({
-      session_id: session.id,
+      user_id: user.id,
     });
 
     res.status(200).json({ message: 'Login successful', user, token, session, monitoringSessionId: monitoringSession.id });
@@ -112,10 +112,10 @@ exports.signOut = async (req, res) => {
   const userId = res.locals.userId;
 
   try {
-    const session = await Session.findOne({ where: { user_id: userId}, order: [['createdAt', 'DESC']]})
+    //const session = await Session.findOne({ where: { user_id: userId}, order: [['createdAt', 'DESC']]})
     // Find the latest active monitoring session for the user
     const monitoringSession = await MonitoringSession.findOne({
-      where: { session_id: session.id, end_time: null },
+      where: { user_id: userId, end_time: null },
       order: [['start_time', 'DESC']],
     });
 
