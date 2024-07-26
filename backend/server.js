@@ -58,9 +58,13 @@ wss.on("connection", (ws) => {
   });
 });
 
-const sendNotification = (userId, notification) => {
+exports.sendNotification = (userId, notification) => {
+	console.log("Just gotten here...");
+	console.log("Wss: ", wss);
   wss.clients.forEach((client) => {
+		console.log("Client: ", client);
     if (client.readyState === WebSocket.OPEN && client.userId === userId) {
+			console.log("In here now")
       client.send(JSON.stringify(notification));
     }
   });
@@ -68,6 +72,6 @@ const sendNotification = (userId, notification) => {
 
 server.listen(port);
 
-module.exports = sendNotification;
+//module.exports = sendNotification;
 
 console.log('Exports from server.js:', module.exports);

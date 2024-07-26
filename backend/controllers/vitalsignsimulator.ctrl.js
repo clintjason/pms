@@ -1,6 +1,6 @@
 const models = require("../models");
 const VitalSign = models.VitalSign;
-//const sendNotification = require('../server.js');
+const sendNotification = require('../server.js');
 
 /*
   Oral temperature: 35.5°C to 37.5°C
@@ -213,13 +213,13 @@ const checkForAlerts = (vitalSigns, userId) => {
     notifications.push({ type: "Respiratory Rate", message: `Respiration rate is out of range: ${vitalSigns.respiration_rate}`, userId});
   }
   // Debugging the import
-  //console.log('sendNotification:', sendNotification);
-  //console.log('Type of sendNotification:', typeof sendNotification);
+  console.log('sendNotification:', sendNotification);
+  console.log('Type of sendNotification:', typeof sendNotification);
   if( notifications.length > 0 ) {
     console.log("IN THE CHECK");
     notifications.forEach(async (notification) => {
       await models.Notification.create({...notification, user_id: userId});
-      //sendNotification(userId, notification);
+      sendNotification.sendNotification(userId, notification);
     });
   }
   return notifications;
